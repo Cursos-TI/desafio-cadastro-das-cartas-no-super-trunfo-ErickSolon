@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #define NUM_ESTADOS 8
 #define CIDADES_POR_ESTADO 4
@@ -111,6 +112,7 @@ int main() {
 
     if (escolhaTipoJogo == "") {
         printf("escolha novamente... fechando jogo...");
+        exit(0);
     } else {
         switch (escolhaTipoJogo) {
             case 1: {
@@ -158,6 +160,7 @@ int main() {
 
             default: {
                 printf("Item não compreendido, fechado jogo! tente novamente...");
+                exit(0);
                 break;
             }
         }
