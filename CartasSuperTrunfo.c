@@ -187,7 +187,7 @@ int main() {
 
     // aqui é onde é feita a comparação de cada carta
     do {
-        printf("\n\nDigite o código de duas cidades para que sejam comparadas!\n");
+        printf("\n\nDigite o código de duas cidades para que sejam comparadas! Exemplo: A01 e A02\n");
         printf("Digite \"-1\" em qualquer input de código de cidade para parar de comparar as cartas e sair do programa!\n");
         printf("Cidade 1: ");
         scanf("%s", &digitarCodigoCidade1);
