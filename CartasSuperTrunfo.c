@@ -5,28 +5,38 @@
 #define CIDADES_POR_ESTADO 4
 #define TOTAL_CIDADES (NUM_ESTADOS * CIDADES_POR_ESTADO)
 
+// função para calcular a densidade populacional
 float calcularDensidadePopulacional(unsigned int populacao, float area) {
-    if (area > 0) {
+    // evitará ter area menor ou igual a 0 para não dar problema de divisão por zero. 
+    if (area >= 0) {
         return populacao / area;
     } else {
         return 0;
     }
 }
 
+// função para calcular PIB per capita
 float calcularPibPerCapita(float pib, unsigned int populacao) {
-    if (populacao > 0) {
+    // evitará ter população menor ou igual a 0 para não dar problema de divisão por zero. 
+    if (populacao >= 0) {
         return pib / populacao;
     } else {
         return 0;
     }
 }
-
+ 
+// aqui nesta função calcula o super poder de cada carta escolhida, 
+// como a densidade populacional deve ser considerada de forma inversa (quanto menor, melhor), 
+// podemos subtrair a densidade para que a densidade de fato "diminua" o valor do Super Poder.
 float calcularSuperPoder(unsigned int populacao, float area, float pib, unsigned int pontosTuristicos) {
     float densidadePopulacional = calcularDensidadePopulacional(populacao, area);
     float pibPerCapita = calcularPibPerCapita(pib, populacao);
-    return (densidadePopulacional + pibPerCapita + pontosTuristicos);
+
+    // a densidade populacional deve ser tratada de forma inversa
+    return ((1.0f / densidadePopulacional) + pibPerCapita + pontosTuristicos);
 }
 
+// função que retorna o índice de uma cidade no array "codigo".
 int obterIndiceCidade(char *codigoCidade, char codigo[TOTAL_CIDADES][4]) {
     for (int i = 0; i < TOTAL_CIDADES; i++) {
         if (strcmp(codigoCidade, codigo[i]) == 0) {
@@ -36,10 +46,10 @@ int obterIndiceCidade(char *codigoCidade, char codigo[TOTAL_CIDADES][4]) {
     return -1;
 }
 
+// aqui ele compara as cartas
 void compararCartas(char *codigoCidade1, char *codigoCidade2, unsigned int populacao[], float area[], float pib[], unsigned int pontosTuristicos[], char codigo[TOTAL_CIDADES][4]) {
     int cidade1 = -1, cidade2 = -1;
     
-    // Encontrar o índice das cidades
     for (int i = 0; i < TOTAL_CIDADES; i++) {
         if (strcmp(codigo[i], codigoCidade1) == 0) {
             cidade1 = i;
@@ -52,6 +62,17 @@ void compararCartas(char *codigoCidade1, char *codigoCidade2, unsigned int popul
     if (cidade1 == -1 || cidade2 == -1) {
         printf("Código da cidade não encontrado.\n");
         return;
+    }
+
+    float densidadePopulacional1 = calcularDensidadePopulacional(populacao[cidade1], area[cidade1]);
+    float densidadePopulacional2 = calcularDensidadePopulacional(populacao[cidade2], area[cidade2]);
+    
+    if (densidadePopulacional1 < densidadePopulacional2) {
+        printf("Cidade %s vence na Densidade Populacional com valor %.2f\n", codigoCidade1, densidadePopulacional1);
+    } else if (densidadePopulacional2 < densidadePopulacional1) {
+        printf("Cidade %s vence na Densidade Populacional com valor %.2f\n", codigoCidade2, densidadePopulacional2);
+    } else {
+        printf("Empate na Densidade Populacional com valor %.2f\n", densidadePopulacional1);
     }
 
     float superPoder1 = calcularSuperPoder(populacao[cidade1], area[cidade1], pib[cidade1], pontosTuristicos[cidade1]);
@@ -81,6 +102,7 @@ int main() {
     char digitarCodigoCidade1[4], digitarCodigoCidade2[4];
     int escolhaTipoJogo;
     
+    // tela inicial do jogo onde o jogador escolherá 1 ou 2 como opções que estão descritas.
     printf("<><><><><> Super Trunfo (Países) <><><><><>\n");
     printf("1 ... Inserção de cidades manualmente.\n");
     printf("2 ... Inserção de cidades automaticamente.\n");
@@ -141,6 +163,7 @@ int main() {
         }
     }
     
+    // aqui ele apenas mostra as cartas baseado na escolha das opções na tela inicial, e printa cada carta dos arrays
     printf("\n=== Cartas das cidades ===\n");
 
     for (int i = 0; i < TOTAL_CIDADES; i++) {
@@ -159,6 +182,7 @@ int main() {
 
     printf("\n=== Fim das Cartas ===\n");
 
+    // aqui é onde é feita a comparação de cada carta
     do {
         printf("\n\nDigite o código de duas cidades para que sejam comparadas!\n");
         printf("Digite \"-1\" em qualquer input de código de cidade para parar de comparar as cartas e sair do programa!\n");
