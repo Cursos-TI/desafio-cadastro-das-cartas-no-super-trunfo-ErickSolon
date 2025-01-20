@@ -34,7 +34,7 @@ float calcularSuperPoder(unsigned int populacao, float area, float pib, unsigned
     float pibPerCapita = calcularPibPerCapita(pib, populacao);
 
     // a densidade populacional deve ser tratada de forma inversa
-    return ((1.0f / densidadePopulacional) + pibPerCapita + pontosTuristicos);
+    return ((1.0f / densidadePopulacional) + pibPerCapita + pontosTuristicos + populacao + area + pib);
 }
 
 // função que retorna o índice de uma cidade no array "codigo".
@@ -68,6 +68,8 @@ void compararCartas(char *codigoCidade1, char *codigoCidade2, unsigned int popul
     float densidadePopulacional1 = calcularDensidadePopulacional(populacao[cidade1], area[cidade1]);
     float densidadePopulacional2 = calcularDensidadePopulacional(populacao[cidade2], area[cidade2]);
     
+    printf("Comparando Cidade %s e Cidade %s:\n", codigoCidade1, codigoCidade2);
+    
     if (densidadePopulacional1 < densidadePopulacional2) {
         printf("Cidade %s vence na Densidade Populacional com valor %.2f\n", codigoCidade1, densidadePopulacional1);
     } else if (densidadePopulacional2 < densidadePopulacional1) {
@@ -79,7 +81,6 @@ void compararCartas(char *codigoCidade1, char *codigoCidade2, unsigned int popul
     float superPoder1 = calcularSuperPoder(populacao[cidade1], area[cidade1], pib[cidade1], pontosTuristicos[cidade1]);
     float superPoder2 = calcularSuperPoder(populacao[cidade2], area[cidade2], pib[cidade2], pontosTuristicos[cidade2]);
 
-    printf("Comparando Cidade %s e Cidade %s:\n", codigoCidade1, codigoCidade2);
 
     if (superPoder1 > superPoder2) {
         printf("Cidade %s vence com Super Poder: %.2f\n", codigoCidade1, superPoder1);
